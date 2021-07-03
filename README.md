@@ -1,2 +1,3 @@
-# simpaticos_game
-juego de disparos usando pygame.
+# A Dream Zzz Game
+
+Game puzzle, shooter, history, in Pygame.
