@@ -1,4 +1,4 @@
-import pygame, time
+import pygame, sys, time
 
 pygame.init()
 
@@ -22,7 +22,7 @@ class Dialog:
                 self.pos = 0
                 self.pos_list = 0
                 
-                self.fast = 0.2
+                self.fast = 0.1
                 self.guion = None
                 
         def reset(self):
@@ -48,4 +48,14 @@ class Dialog:
                 if self.guion[self.pos_list] != '':
                         text = self.text()
                         screen.blit(text, (position[0]-50, position[1]-50))
+
+
+def exit_keys(event):
+        if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
 

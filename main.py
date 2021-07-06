@@ -2,7 +2,10 @@ import pygame, sys
 from pygame.locals import *
 import random
 from phase_room import Game_Room
+from phase_room2 import Game_Room2
 from phase_shoot import Game_Shoot
+from phase_run import Game_Run
+from utils import exit_keys
 
 pygame.init()
 pygame.mixer.init()
@@ -11,9 +14,8 @@ pygame.mixer.init()
 class Game:
         clock = pygame.time.Clock()
 
-        WINDOW_SIZE = (1300,650)
-
-        screen = pygame.display.set_mode(WINDOW_SIZE,0,32)
+        screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        WINDOW_SIZE = pygame.display.get_window_size()
 
         pygame.mixer.music.load('music/naruto.mp3')
         pygame.mixer.music.set_volume(0.2)
@@ -23,10 +25,15 @@ class Game:
         def run_game(self):
                 self.background_music()
                         
-                while not Game_Room(self.WINDOW_SIZE):
+                while not Game_Room():
+                        self.restart_game()
+
+                Game_Room2()
+                
+                while not Game_Run():
                         self.restart_game()
                         
-                while not Game_Shoot(self.WINDOW_SIZE):
+                while not Game_Shoot():
                         self.restart_game()
 
                 if self.push_button(text='Ganaste!!! jugar de nuevo ?'):
@@ -64,8 +71,7 @@ class Game:
 
                 while True:
                         for event in pygame.event.get():
-                                if event.type == QUIT:
-                                        self.exit_game()
+                                exit_keys(event)
                                 if event.type == MOUSEBUTTONDOWN:
                                         if event.button == 1 and yes.collidepoint(event.pos):
                                                 return True

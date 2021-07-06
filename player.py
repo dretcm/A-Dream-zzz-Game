@@ -22,9 +22,12 @@ class Player:
 
         speed_sprite = 0.1
 
-        def __init__(self, window_size):
-                self.x = window_size[0]//2 - 45
-                self.y = window_size[1]//2 - 25
+        def __init__(self, window_size, pos_init=None):
+                if pos_init:
+                        self.x, self.y = pos_init
+                else:
+                        self.x = window_size[0]//2 - 45
+                        self.y = window_size[1]//2 - 25
                 
                 self.rect = pygame.Rect(self.x,self.y, self.width, self.height)
 
@@ -108,9 +111,9 @@ class Player:
 
      
 class Player_room(Player):
-        def __init__(self, window_size):
-                super().__init__(window_size)
-                self.limits = [120,1050,50,500] # left, right, top, botton
+        def __init__(self, window_size, limits, pos_init=None):
+                super().__init__(window_size, pos_init)
+                self.limits = limits # [120,1050,50,500] # left, right, top, botton
                 self.speed = 5
                         
         def moving(self):                         
@@ -123,3 +126,60 @@ class Player_room(Player):
                 if self.down and self.rect.y < self.limits[3]:
                         self.rect.y += self.speed                
 
+
+class Player_Run:
+        floor = True
+        font = pygame.font.Font(None,30)
+        recorrido = 0
+
+        width = 40
+        height = 40
+
+        const_up = 15
+        up = 0
+        down = 1
+        
+        def __init__(self,window_size, floor_pos):
+                self.window_size = window_size
+                self.floor_pos = floor_pos
+                self.x, self.y = window_size[0]//2 - 200, window_size[1]//2 -20
+                
+                self.collider = pygame.Rect(self.x,self.y, self.width, self.height)
+                self.images = load_images(['images/player/player6.png', 'images/player/player7.png'], size=(self.width, self.height), bg_color=(255,255,255))
+                self.img = self.images[0]
+                self.current = 0
+                self.speed_sprite = 0.2
+                self.limit_sprites = len(self.images)
+                
+        def down_key(self,key):
+                if key == K_UP and not self.floor:
+                        self.up = self.const_up
+                        self.floor = True
+                        
+        def moving_player(self, screen):
+                if self.floor:
+                        self.collider.y -= self.up
+                        self.up -= self.down
+
+                if self.collider.y + self.height > self.floor_pos:
+                        self.collider.y = self.floor_pos - self.height + 1
+
+                self.recorrido += 1
+                
+                self.sprites(screen)
+                
+                message = self.font.render('metros: '+ str(self.recorrido), 1, (0, 0, 0))
+                screen.blit(message, (self.window_size[0]-150, 10))
+
+        def sprites(self, screen):
+                screen.blit(self.img, self.get_position())
+                self.img = self.images[int(self.current)]
+                self.current += self.speed_sprite
+                if self.current >= self.limit_sprites:
+                        self.current = 0
+                
+        def get_collider(self):
+                return self.collider
+        
+        def get_position(self):
+                return (self.collider.x, self.collider.y)

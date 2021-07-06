@@ -1,6 +1,6 @@
 import pygame, sys, time, random
 from pygame.locals import *
-from utils import load_images, Dialog
+from utils import load_images, Dialog, exit_keys
 from player import Player_room
 
 pygame.init()
@@ -208,11 +208,12 @@ class Objects:
                 return str(self.reply)
         
 
-def Game_Room(window_size):
+def Game_Room():
         fps = 30
         clock = pygame.time.Clock()
-        WINDOW_SIZE = window_size
-        screen = pygame.display.set_mode(WINDOW_SIZE,0,32)
+        
+        screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        WINDOW_SIZE = pygame.display.get_window_size()
         
         dialog = Dialog((255,255,255))
         message = ['donde estoy ?', 'debo salir de aqui!', 'pero como ?']
@@ -221,7 +222,7 @@ def Game_Room(window_size):
         objetos = Objects()
 
         computer = Cpu()
-        player = Player_room(WINDOW_SIZE)
+        player = Player_room(WINDOW_SIZE, [120,1050,50,500])
 
         bg = load_images(['images/background.png'], size=(1200,600))[0]
 
@@ -234,9 +235,7 @@ def Game_Room(window_size):
 
         while True:     
                 for event in pygame.event.get():
-                        if event.type == QUIT:
-                                pygame.quit() 
-                                sys.exit()
+                        exit_keys(event)
                         if event.type == KEYDOWN:
                                 player.down_key(event.key)
                                 if computer.can_entry():
@@ -278,6 +277,6 @@ def Game_Room(window_size):
 
 
 if __name__ == '__main__':
-        print(Game_Room((1200,600)))
-
+        print(Game_Room())
+        pygame.quit()
 

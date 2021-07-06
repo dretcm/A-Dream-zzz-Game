@@ -3,7 +3,7 @@ from pygame.locals import *
 import random, math
 
 from player import Player
-from utils import Dialog
+from utils import Dialog, exit_keys
 
 
 pygame.init()
@@ -174,7 +174,7 @@ class Gun(Direccion):
         
         
 class Enemy(Direccion):
-        range_speed = [2, 5, 10, 17]
+        range_speed = [5, 10, 15, 20]
         width = 100
         height = 80
         
@@ -269,7 +269,7 @@ class Boss(Direccion):
         width = 300
         height = 180
 
-        speed = 17
+        speed = 20
 
         fase = 1
 
@@ -484,13 +484,12 @@ class Municion:
                 return (self.collider.x, self.collider.y)
 
 
-def Game_Shoot(window_size):
+def Game_Shoot():
         clock = pygame.time.Clock()
         fps = 30
 
-        WINDOW_SIZE = window_size
-
-        screen = pygame.display.set_mode(WINDOW_SIZE,0,32)
+        screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        WINDOW_SIZE = pygame.display.get_window_size()
 
         limite = 10
                         
@@ -501,13 +500,11 @@ def Game_Shoot(window_size):
         boss = Boss(WINDOW_SIZE)
 
         dialog = Dialog((0,0,0))
-        dialog.message(['ahora porque tengo una pistola !!!'])
+        dialog.message(['aqui y ahora!!!', 'vengan!!!'])
                 
         while True:
                 for event in pygame.event.get():
-                        if event.type == QUIT:
-                                pygame.quit()
-                                sys.exit()
+                        exit_keys(event)
                         if event.type == KEYDOWN:
                                 player.down_key(event.key)
                         if event.type == MOUSEBUTTONDOWN  and event.button == 1:
@@ -544,5 +541,6 @@ def Game_Shoot(window_size):
                         
 
 if __name__ == '__main__':
-        print(Game_Shoot((1200,600)))
+        print(Game_Shoot())
+        pygame.quit()
 
